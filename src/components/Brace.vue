@@ -1,5 +1,6 @@
 <template>
     <div @keyup.ctrl.enter="processCode()">
+        <projects v-model="projectConfig" :projects="projects"></projects>
         <pre v-html="output"></pre>
         <brace style="height: 500px"
                :fontsize="'12px'"
@@ -18,19 +19,23 @@
 
 <script>
     import Brace from 'vue-bulma-brace';
+    import Projects from './Projects.vue';
     import axios from 'axios';
     import * as brace from 'brace'
 
     export default {
+        props: ['projects'],
         data(){
             return {
                 code: '',
                 output: '',
                 editor: false,
+                projectConfig: {},
             }
         },
         components: {
-            Brace
+            Brace,
+            Projects,
         },
         methods: {
             updateCodeData(code){

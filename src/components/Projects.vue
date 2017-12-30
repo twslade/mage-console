@@ -35,7 +35,22 @@
             },
             getStores(){
                 return this.projects[this.selectedProject].stores;
+            },
+            collectConfig(){
+                return {
+                    project : this.selectedProject,
+                    website: this.selectedWebsite,
+                    store: this.selectedStore,
+                }
+            },
+            emitConfig(){
+                this.$emit('input', this.collectConfig());
             }
+        },
+        watch: {
+            selectedStore(){this.emitConfig();},
+            selectedWebsite(){this.emitConfig();},
+            selectedProject(){this.emitConfig();},
         }
     }
 </script>

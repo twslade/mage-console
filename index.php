@@ -18,8 +18,7 @@ Lib\Executor::execute();
 </head>
 <body>
 <div id="app">
-    <projects :projects="<?php echo Lib\VueFilter::filter(Lib\MagentoProjects::getProjects()); ?>"></projects>
-    <brace-editor></brace-editor>
+    <brace-editor :projects="<?php echo Lib\VueFilter::filter(Lib\MagentoProjects::getProjects()); ?>"></brace-editor>
 </div>
 </body>
 <script src="build/app.js"></script>

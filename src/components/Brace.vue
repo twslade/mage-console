@@ -30,7 +30,11 @@
                 code: '',
                 output: '',
                 editor: false,
-                projectConfig: {},
+                projectConfig: {
+                    project: false,
+                    website: false,
+                    store: false,
+                },
             }
         },
         components: {
@@ -43,7 +47,11 @@
                 this.code = code;
             },
             processCode(){
-                axios.post('/',{code: this.code})
+                axios.post('/',{
+                    code: this.code,
+                    project: this.projectConfig.project,
+                    website: this.projectConfig.website,
+                })
                     .then(res => this.setOutput(res.data));
             },
             setOutput(output){

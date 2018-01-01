@@ -10,7 +10,6 @@ class MagentoProject
     public function __construct($mageFilePath)
     {
         $this->_mageFilePath = $mageFilePath;
-        $this->_collectData();
     }
 
     public function injectMagento($runCode = '', $runType = 'store'){
@@ -30,6 +29,7 @@ class MagentoProject
     }
 
     public function toArray(){
+        $this->_collectData();
         return $this->_data;
     }
 

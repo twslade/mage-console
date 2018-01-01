@@ -38,19 +38,36 @@
             },
             collectConfig(){
                 return {
-                    project : this.selectedProject,
+                    project : this.projects[this.selectedProject].file,
                     website: this.selectedWebsite,
                     store: this.selectedStore,
                 }
             },
             emitConfig(){
                 this.$emit('input', this.collectConfig());
+            },
+            getFromStorage(type){
+                return (this.$ls.get(type)) ? this.$ls.get(type) : false;
             }
         },
         watch: {
-            selectedStore(){this.emitConfig();},
-            selectedWebsite(){this.emitConfig();},
-            selectedProject(){this.emitConfig();},
+            selectedStore(){
+                this.$ls.set('store', this.selectedStore);
+                this.emitConfig();
+            },
+            selectedWebsite(){
+                this.$ls.set('website', this.selectedWebsite);
+                this.emitConfig();
+            },
+            selectedProject(){
+                this.$ls.set('project', this.selectedProject);
+                this.emitConfig();
+            },
+        },
+        mounted(){
+            this.selectedStore = (this.getFromStorage('store')) ? this.getFromStorage('storage') : false;
+            this.selectedWebsite = (this.getFromStorage('website')) ? this.getFromStorage('website') : false;
+            this.selectedProject = (this.getFromStorage('project')) ? this.getFromStorage('project') : false;
         }
     }
 </script>

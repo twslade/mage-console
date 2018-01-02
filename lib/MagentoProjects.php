@@ -11,6 +11,8 @@ class MagentoProjects
 
     public static $projects = [];
 
+    const PROJECT_PARSER_REGEX = '/\.\.\/\.\.\/((\w)*(\.)?(\w)*)\//';
+
     /*
      * @return array
      */
@@ -21,8 +23,12 @@ class MagentoProjects
             ->in(__DIR__ . self::MAGENTO_FILE_FINDER_PATTERN);
 
         foreach($finder as $mageFilePath){
-            $project = new MagentoProject($mageFilePath->getPathname());
-            self::$projects[] = $project->toArray();
+            $regMatches = [];
+            preg_match(self::PROJECT_PARSER_REGEX, $mageFilePath->getPathname(), $regMatches);
+            self::$projects[] = [
+                'path' => $mageFilePath->getPathname(),
+                'project_id' => array_key_exists(1, $regMatches) ? $regMatches[1] : $regMatches[0],
+            ];
         }
 
         return self::$projects;

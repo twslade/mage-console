@@ -9,33 +9,41 @@ class Executor
 
     const PROJECT_PATH = 'proj';
 
-    public static function getProjectInfo($postData){
+    const DEBUG_FLAG = 'debug';
+
+    const PROJECT_FLAG = 'project';
+
+    const WEBSITE_FLAG = 'website';
+
+    const PRETTY_DUMP_FLAG = 'pretty';
+
+    private static function __getProjectInfo($postData){
         $project = new MagentoProject($postData[ self::PROJECT_PATH ]);
-        $project->injectMagento(self::getRunCode($postData), self::getRunType($postData));
+        $project->injectMagento(self::__getRunCode($postData), self::__getRunType($postData));
         echo json_encode($project->toArray());
         die;
     }
 
     public static function execute(){
         $postData = json_decode(file_get_contents('php://input'), true);
-        if(self::shouldExecuteMagentoCode($postData)){
-            self::runMageCode($postData);
-        } elseif (self::shouldGetProjectInfo($postData)){
-            self::getProjectInfo($postData);
+        if(self::__shouldExecuteMagentoCode($postData)){
+            self::__runMageCode($postData);
+        } elseif (self::__shouldGetProjectInfo($postData)){
+            self::__getProjectInfo($postData);
         }
     }
 
-    public static function shouldExecuteMagentoCode($postData){
+    private static function __shouldExecuteMagentoCode($postData){
         return isset($postData[ self::EXECUTION_FLAG ]);
     }
 
-    public static function runMageCode($postData){
-        if(self::isProjectSelected($postData)){
-            $project = new MagentoProject($postData['project']);
-            $project->injectMagento(self::getRunCode($postData), self::getRunType($postData));
+    private static function __runMageCode($postData){
+        if(self::__isProjectSelected($postData)){
+            $project = new MagentoProject($postData[ self::PROJECT_FLAG ]);
+            $project->injectMagento(self::__getRunCode($postData), self::__getRunType($postData));
         }
-        $code = $postData[ self::EXECUTION_FLAG ];
-        $code = self::sanitize($code);
+
+        $code = self::__prepareCode($postData);
 
         ob_start();
         eval($code);
@@ -44,19 +52,39 @@ class Executor
         die;
     }
 
-    public static function getRunCode($postData){
-        return isset($postData['website']) ? $postData['website'] : '';
+    private static function __prepareCode($postData){
+        $code = $postData[ self::EXECUTION_FLAG ];
+        $code = self::__sanitize($code);
+        $code = self::__injectDebugCode($code, $postData[ self::DEBUG_FLAG ]);
+        $code = self::__replaceDumps($code, $postData[ self::PRETTY_DUMP_FLAG ]);
+        return $code;
     }
 
-    public static function getRunType($postData){
-        return isset($postData['website']) ? 'website' : 'store';
+    private static function __replaceDumps($code, $pretty){
+        if($pretty) {
+            $code = 'Kint_Renderer_Rich::$theme = "solarized-dark.css";Kint::$expanded=true;' . $code;
+            $code = str_replace(array('print_r', 'var_dump'), 'd', $code);
+        }
+        return $code;
     }
 
-    public static function isProjectSelected($postData){
-        return isset($postData['project']) && $postData['project'] != false;
+    private static function __injectDebugCode($code, $debug){
+        return $debug . $code;
     }
 
-    public static function sanitize($code){
+    private static function __getRunCode($postData){
+        return isset($postData[ self::WEBSITE_FLAG ]) ? $postData[ self::WEBSITE_FLAG ] : '';
+    }
+
+    private static function __getRunType($postData){
+        return isset($postData[ self::WEBSITE_FLAG ]) ? self::WEBSITE_FLAG : 'store';
+    }
+
+    private static function __isProjectSelected($postData){
+        return isset($postData[ self::PROJECT_FLAG ]) && $postData[ self::PROJECT_FLAG ] != false;
+    }
+
+    private static function __sanitize($code){
         if (get_magic_quotes_gpc()) {
             $code = stripslashes($code);
         }
@@ -64,11 +92,7 @@ class Executor
         return $code;
     }
 
-    /**
-     * @param $postData
-     * @return bool
-     */
-    protected static function shouldGetProjectInfo($postData)
+    private static function __shouldGetProjectInfo($postData)
     {
         return isset($postData[ self::PROJECT_PATH ]);
     }

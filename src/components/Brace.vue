@@ -1,7 +1,8 @@
 <template>
     <div @keyup.ctrl.enter="processCode()">
         <projects v-model="projectConfig" :projects="projects"></projects>
-        <pre v-html="output"></pre>
+        <options v-model="options"></options>
+        <div v-html="output"></div>
         <brace style="height: 500px"
                :fontsize="'12px'"
                :theme="'twilight'"
@@ -20,6 +21,7 @@
 <script>
     import Brace from 'vue-bulma-brace';
     import Projects from './Projects.vue';
+    import Options from './Options.vue';
     import axios from 'axios';
     import * as brace from 'brace'
 
@@ -35,11 +37,16 @@
                     website: false,
                     store: false,
                 },
+                options: {
+                    debug: false,
+                    pretty: false,
+                },
             }
         },
         components: {
             Brace,
             Projects,
+            Options,
         },
         methods: {
             updateCodeData(code){
@@ -51,6 +58,8 @@
                     code: this.code,
                     project: this.projectConfig.project,
                     website: this.projectConfig.website,
+                    debug: this.options.debug,
+                    pretty: this.options.pretty,
                 })
                     .then(res => this.setOutput(res.data));
             },

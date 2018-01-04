@@ -49,7 +49,7 @@
             },
             collectConfig(){
                 return {
-                    project : this.projects[this.selectedProject].path,
+                    project : (this.projects[this.selectedProject]) ? this.projects[this.selectedProject].path : null,
                     website: this.selectedWebsite,
                     store: this.selectedStore,
                 }

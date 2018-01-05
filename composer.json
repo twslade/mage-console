@@ -8,7 +8,8 @@
     ],
     "require": {
         "symfony/finder": "^3.4",
-        "kint-php/kint": "^2.2"
+        "kint-php/kint": "^2.2",
+        "symfony/cache": "^3.4"
     },
     "autoload": {
         "psr-4": {

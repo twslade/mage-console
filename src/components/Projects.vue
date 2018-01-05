@@ -1,22 +1,36 @@
 <template>
-    <div>
-        <label for="site-selector">Project</label>
-        <select id="site-selector" v-model="selectedProject">
-            <option v-for="(proj, idx) in projects" :value="idx">{{ proj.project_id }}</option>
-        </select>
-        <template v-if="isProjectSelected">
-            <label for="site-selector">Website</label>
-            <select v-model="selectedWebsite">
-                <option v-for="website in getWebsites()" :value="website.code">{{ website.name }}</option>
-            </select>
-        </template>
-        <template v-if="isProjectSelected">
-            <label for="site-selector">Stores</label>
-            <select v-model="selectedStore">
-                <option v-for="store in getStores()" :value="store.code">{{ store.name }}</option>
-            </select>
-        </template>
-    </div>
+    <v-layout row wrap>
+        <v-flex xs4>
+            <v-select
+                    v-bind:items="projectsForSelect"
+                    v-model="selectedProject"
+                    :label="projectName"
+                    dark
+            ></v-select>
+        </v-flex>
+        <v-flex xs4>
+            <v-select
+                    v-if="isProjectSelected"
+                    v-bind:items="getWebsites()"
+                    v-model="selectedWebsite"
+                    label="Website"
+                    dark
+                    item-value="code"
+                    item-text="name"
+            ></v-select>
+        </v-flex>
+        <v-flex xs4>
+            <v-select
+                    v-if="isProjectSelected"
+                    v-bind:items="getStores()"
+                    v-model="selectedStore"
+                    label="Stores"
+                    dark
+                    item-value="code"
+                    item-text="name"
+            ></v-select>
+        </v-flex>
+    </v-layout>
 </template>
 
 <script>
@@ -39,6 +53,14 @@
             isProjectSelected(){
                 return this.selectedProject !== false && !_.isEmpty(this.selectedProjectData);
             },
+            projectName(){
+                return (this.projects[this.selectedProject]) ? this.projects[this.selectedProject].project_id : 'Select a Project';
+            },
+            projectsForSelect(){
+                return _.map(this.projects, function(projData, idx){
+                    return {text: projData.project_id, value: idx};
+                });
+            }
         },
         methods: {
             getWebsites(){
@@ -52,6 +74,7 @@
                     project : (this.projects[this.selectedProject]) ? this.projects[this.selectedProject].path : null,
                     website: this.selectedWebsite,
                     store: this.selectedStore,
+                    projectTitle : (this.projects[this.selectedProject]) ? this.projects[this.selectedProject].project_id : 'Magento Console',
                 }
             },
             emitConfig(){

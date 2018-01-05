@@ -1,11 +1,11 @@
 <template>
-    <div>
+    <v-flex xs12>
         <label for="debug">Enable Debugger</label>
         <input type="checkbox" name="debug" id="debug" v-model="debug">
         <input v-if="debug" v-model="debugCode">
         <label for="debug">Enable Pretty Dump</label>
         <input type="checkbox" name="prettyDump" id="prettyDump" v-model="prettyDump">
-    </div>
+    </v-flex>
 </template>
 
 <script>

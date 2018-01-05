@@ -6,6 +6,7 @@ class MagentoProject
 {
     protected $_mageFilePath = null;
     protected $_data = [];
+    const CACHE_KEY_PREFIX = 'PROJECT_';
 
     public function __construct($mageFilePath)
     {
@@ -19,6 +20,7 @@ class MagentoProject
 
     protected function _collectData(){
         $this->injectMagento();
+
         $this->_data = [
             'file' => $this->_mageFilePath,
             'title' => \Mage::getStoreConfig('design/header/logo_alt'),
@@ -29,8 +31,19 @@ class MagentoProject
     }
 
     public function toArray(){
+        if(Cache::getInstance()->has($this->_generateCacheKey())){
+            return Cache::getInstance()->get($this->_generateCacheKey());
+        }
+
         $this->_collectData();
+
+        Cache::getInstance()->set($this->_generateCacheKey(), $this->_data);
+
         return $this->_data;
+    }
+
+    protected function _generateCacheKey(){
+        return self::CACHE_KEY_PREFIX . md5($this->_mageFilePath);
     }
 
     protected function _getStores(){

@@ -1,36 +1,50 @@
 <template>
-    <v-layout row wrap>
-        <v-flex xs4>
-            <v-select
-                    v-bind:items="projectsForSelect"
-                    v-model="selectedProject"
-                    :label="projectName"
-                    dark
-            ></v-select>
-        </v-flex>
-        <v-flex xs4>
-            <v-select
-                    v-if="isProjectSelected"
-                    v-bind:items="getWebsites()"
-                    v-model="selectedWebsite"
-                    label="Website"
-                    dark
-                    item-value="code"
-                    item-text="name"
-            ></v-select>
-        </v-flex>
-        <v-flex xs4>
-            <v-select
-                    v-if="isProjectSelected"
-                    v-bind:items="getStores()"
-                    v-model="selectedStore"
-                    label="Stores"
-                    dark
-                    item-value="code"
-                    item-text="name"
-            ></v-select>
-        </v-flex>
-    </v-layout>
+    <v-container grid-list-md>
+        <v-layout>
+            <v-flex xs4>
+                <v-card dark>
+                    <v-card-text>
+                        <v-select
+                                v-bind:items="projectsForSelect"
+                                v-model="selectedProject"
+                                :label="projectName"
+                                dark
+                        ></v-select>
+                    </v-card-text>
+                </v-card>
+            </v-flex>
+            <v-flex xs4>
+                <v-card dark>
+                    <v-card-text>
+                        <v-select
+                                v-if="isProjectSelected"
+                                v-bind:items="getWebsites()"
+                                v-model="selectedWebsite"
+                                label="Website"
+                                dark
+                                item-value="code"
+                                item-text="name"
+                        ></v-select>
+                    </v-card-text>
+                </v-card>
+            </v-flex>
+            <v-flex xs4>
+                <v-card dark>
+                    <v-card-text>
+                        <v-select
+                                v-if="isProjectSelected"
+                                v-bind:items="getStores()"
+                                v-model="selectedStore"
+                                label="Stores"
+                                dark
+                                item-value="code"
+                                item-text="name"
+                        ></v-select>
+                    </v-card-text>
+                </v-card>
+            </v-flex>
+        </v-layout>
+    </v-container>
 </template>
 
 <script>

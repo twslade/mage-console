@@ -1,11 +1,23 @@
 <template>
-    <v-flex xs12>
-        <label for="debug">Enable Debugger</label>
-        <input type="checkbox" name="debug" id="debug" v-model="debug">
-        <input v-if="debug" v-model="debugCode">
-        <label for="debug">Enable Pretty Dump</label>
-        <input type="checkbox" name="prettyDump" id="prettyDump" v-model="prettyDump">
-    </v-flex>
+    <v-container grid-list-md>
+        <v-layout>
+            <v-flex xs6>
+                <v-card color="secondary" flat>
+                    <v-card-text>
+                        <v-switch v-model="debug" label="Enable Debugger" dark></v-switch>
+                        <v-text-field v-if="debug" v-model="debugCode" label="Debug code"></v-text-field>
+                    </v-card-text>
+                </v-card>
+            </v-flex>
+            <v-flex xs6>
+                <v-card color="secondary" flat>
+                    <v-card-text>
+                        <v-switch v-model="prettyDump" label="Enable Pretty Dump" dark></v-switch>
+                    </v-card-text>
+                </v-card>
+            </v-flex>
+        </v-layout>
+    </v-container>
 </template>
 
 <script>

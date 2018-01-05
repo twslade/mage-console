@@ -20,7 +20,6 @@ class MagentoProject
 
     protected function _collectData(){
         $this->injectMagento();
-
         $this->_data = [
             'file' => $this->_mageFilePath,
             'title' => \Mage::getStoreConfig('design/header/logo_alt'),

@@ -17,6 +17,8 @@ class Executor
 
     const PRETTY_DUMP_FLAG = 'pretty';
 
+    const AUTOLOAD_FLAG = 'autoload';
+
     private static function __getProjectInfo($postData){
         $project = new MagentoProject($postData[ self::PROJECT_PATH ]);
         $project->injectMagento(self::__getRunCode($postData), self::__getRunType($postData));
@@ -57,6 +59,7 @@ class Executor
         $code = self::__sanitize($code);
         $code = self::__injectDebugCode($code, $postData[ self::DEBUG_FLAG ]);
         $code = self::__replaceDumps($code, $postData[ self::PRETTY_DUMP_FLAG ]);
+        $code = self::__injectAutoloader($code, $postData[ self::AUTOLOAD_FLAG ]);
         return $code;
     }
 
@@ -64,6 +67,13 @@ class Executor
         if($pretty) {
             $code = 'Kint_Renderer_Rich::$theme = "solarized-dark.css";Kint::$expanded=true;' . $code;
             $code = str_replace(array('print_r', 'var_dump'), 'd', $code);
+        }
+        return $code;
+    }
+
+    private static function __injectAutoloader($code, $autoload){
+        if($autoload){
+            $code = 'Mage::getConfig()->init()->loadEventObservers("global"); Mage::app()->addEventArea("global"); Mage::dispatchEvent("add_spl_autoloader");' . $code;
         }
         return $code;
     }

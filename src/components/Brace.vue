@@ -89,6 +89,7 @@
                 options: {
                     debug: false,
                     pretty: false,
+                    autoload: false,
                 },
                 drawer: null,
             }
@@ -110,6 +111,7 @@
                     website: this.projectConfig.website,
                     debug: this.options.debug,
                     pretty: this.options.pretty,
+                    autoload: this.options.autoload,
                 })
                     .then(res => this.setOutput(res.data));
             },
